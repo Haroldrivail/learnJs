@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+      const guess = 8;
+      let n;
+
+      while (true) {
+        n = parseInt(prompt("Entrer un nombre"));
+
+        if (n === guess) {
+          console.log("Bravo, vous avez trouvé le nombre caché!");
+          break;
+        }
+
+        console.log("Dommage, essayez de nouveau");
+        console.log(n < guess ? "Plus" : "Moins");
+      }
+    </script>
+  </head>
+  <body></body>
+</html>
