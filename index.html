@@ -5,30 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script>
-      function getRandomInt(max) {
-        return Math.floor(Math.random() * Math.floor(max));
-      }
-      const randomNumber = getRandomInt(10);
-
-      function isRightAnswer(answer) {
-        return answer === randomNumber;
-      }
-
-      function guess(answer) {
-        const number = prompt("Entrer un nombre") * 1;
-        return isRightAnswer(number);
-      }
-
-      for (let i = 0; i < 3; i++) {
-        if (guess(randomNumber)) {
-          console.log("Bravo vous avez trouve le bon nombre");
-          break;
-        } else if (i === 2) {
-          console.log("Vous avez perdu");
-          break;
+      function isPrimeNumber(n) {
+        if (n < 2) {
+          return false;
         }
+        for (let i = n - 1; i > 1; i--) {
+          if (n % i === 0) {
+            return false;
+          }
+        }
+        return true;
       }
-      console.log("Le nombre est : " + randomNumber);
+
+      console.log(0, isPrimeNumber(0));
+      console.log(1, isPrimeNumber(1));
+      console.log(2, isPrimeNumber(2));
+      console.log(3, isPrimeNumber(3));
+      console.log(4, isPrimeNumber(4));
+      console.log(5, isPrimeNumber(5));
+      console.log(6, isPrimeNumber(6));
+      console.log(7, isPrimeNumber(7));
+      console.log(8, isPrimeNumber(8));
+      console.log(9, isPrimeNumber(9));
+      console.log(10, isPrimeNumber(10));
     </script>
   </head>
   <body>
