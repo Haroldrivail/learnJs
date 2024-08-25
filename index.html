@@ -5,21 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script>
-      const guess = 8;
-      let n;
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+      }
+      const randomNumber = getRandomInt(10);
 
-      while (true) {
-        n = parseInt(prompt("Entrer un nombre"));
+      function isRightAnswer(answer) {
+        return answer === randomNumber;
+      }
 
-        if (n === guess) {
-          console.log("Bravo, vous avez trouvé le nombre caché!");
+      function guess(answer) {
+        const number = prompt("Entrer un nombre") * 1;
+        return isRightAnswer(number);
+      }
+
+      for (let i = 0; i < 3; i++) {
+        if (guess(randomNumber)) {
+          console.log("Bravo vous avez trouve le bon nombre");
+          break;
+        } else if (i === 2) {
+          console.log("Vous avez perdu");
           break;
         }
-
-        console.log("Dommage, essayez de nouveau");
-        console.log(n < guess ? "Plus" : "Moins");
       }
+      console.log("Le nombre est : " + randomNumber);
     </script>
   </head>
-  <body></body>
+  <body>
+    <h1>Bienvenue sur mon site</h1>
+  </body>
 </html>
