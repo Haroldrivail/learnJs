@@ -5,29 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script>
-      function isPrimeNumber(n) {
-        if (n < 2) {
-          return false;
-        }
-        for (let i = n - 1; i > 1; i--) {
-          if (n % i === 0) {
-            return false;
-          }
-        }
-        return true;
+      function isPalindrome(str) {
+        const word = str.split("").reverse().join("");
+        // return str.toLowerCase() === word.toLowerCase();
+        return str.toLowerCase() === word;
       }
 
-      console.log(0, isPrimeNumber(0));
-      console.log(1, isPrimeNumber(1));
-      console.log(2, isPrimeNumber(2));
-      console.log(3, isPrimeNumber(3));
-      console.log(4, isPrimeNumber(4));
-      console.log(5, isPrimeNumber(5));
-      console.log(6, isPrimeNumber(6));
-      console.log(7, isPrimeNumber(7));
-      console.log(8, isPrimeNumber(8));
-      console.log(9, isPrimeNumber(9));
-      console.log(10, isPrimeNumber(10));
+      const words = {
+        kayak: true,
+        SOS: true,
+        Kayak: true,
+        Bonjour: false,
+      };
+
+      for (let word in words) {
+        if (isPalindrome(word) != words[word]) {
+          console.error(
+            `isPalindrome(${word}) aurait dû retourner "True" mais retourne "False"`
+          );
+        }
+      }
     </script>
   </head>
   <body>
