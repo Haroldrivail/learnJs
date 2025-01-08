@@ -1,66 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script>
-      const students = [
-        {
-          name: "John",
-          notes: [12, 15, 10, 13, 16, 19, 20],
-        },
-        {
-          name: "Mary",
-          notes: [10, 15, 20, 9, 15, 14, 20],
-        },
-        {
-          name: "Peter",
-          notes: [12, 12, 10, 15, 9, 19, 2],
-        },
-        {
-          name: "Anna",
-          notes: [10, 17, 10, 10, 16, 19, 20],
-        },
-        {
-          name: "Paul",
-          notes: [5, 15, 17, 9, 19, 19, 20],
-        },
-      ];
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+        />
+        <script src="app.js" type="module" defer></script>
+        <style>
+            .hide-completed .is-completed,
+            .hide-todo .todo:not(.is-completed) {
+                display: none !important;
+            }
+        </style>
+    </head>
 
-      const moyenne = (notes) => {
-        let sum = 0;
-        for (let note of notes) {
-          sum += note;
-        }
-        return sum / notes.length;
-      };
-
-      for (const student of students) {
-        student.moyenne = moyenne(student.notes);
-        student.worst = Math.min(...student.notes);
-        student.best = Math.max(...student.notes);
-      }
-
-      const compareStudents = (a, b) => {
-        return b.moyenne - a.moyenne;
-      };
-
-      students.sort(compareStudents);
-
-      const formatStudent = (student) => {
-        // return students.map((student) => {
-        return `${student.name} avec une moyenne de ${student.moyenne} et un meilleur de ${student.best} et un pire de ${student.worst}`;
-        // });
-      };
-
-      console.log(`Top 3 etudiants:
-      1: ${formatStudent(students[0])}
-      2: ${formatStudent(students[1])}
-      3: ${formatStudent(students[2])}`);
-    </script>
-  </head>
-  <body>
-    <h1>Bienvenue sur mon site</h1>
-  </body>
+    <body>
+        <section
+            class="container pt-5"
+            id="todolist"
+            data-testid="todolist"
+        ></section>
+    </body>
 </html>
