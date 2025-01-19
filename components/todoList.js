@@ -1,69 +1,43 @@
-import { createElement } from "../functions/dom.js";
+import { cloneTemplate } from "../functions/dom.js";
 
 /**
+ * Represents a list of todo items.
  * @typedef {object} Todo
- * @property {string} id
- * @property {string} title
- * @property {boolean} completed
+ * @property {string} id - The unique identifier for the todo item.
+ * @property {string} title - The title of the todo item.
+ * @property {boolean} completed - Whether the todo item is completed or not.
  */
 
 export class TodoList {
-    /**@type {HTMLUListElement} */
+    /**
+     * The HTML element that contains the list of todo items.
+     * @type {HTMLUListElement}
+     */
     #listElement = null;
 
-    /**@type {Todo[]} */
+    /**
+     *  An array of Todo objects.
+     *  @type {Todo[]}
+     */
     #todos = [];
 
     /**
-     * @param {Todo[]} todos
+     * Creates a new TodoList instance.
+     * @param {Todo[]} todos - An array of Todo objects
      */
     constructor(todos) {
         this.#todos = todos;
     }
 
     /**
+     * Appends the todo list to the specified HTML element.
      *
-     * @param {HTMLElement} element
+     * @param {HTMLElement} element - The HTML element to append the todo list to.
+     * @returns {void}
      */
     appendTo(element) {
-        element.innerHTML = `<form class="d-flex pb-4" data-testid="todo-form">
-                <input
-                    required=""
-                    class="form-control"
-                    type="text"
-                    placeholder="Acheter des patates..."
-                    name="title"
-                />
-                <button class="btn btn-primary">Ajouter</button>
-            </form>
-            <main>
-                <div class="btn-group mb-4 filter" role="group" data-testid="filter-buttons">
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary active"
-                        data-filter="all"
-                    >
-                        Toutes
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary"
-                        data-filter="todo"
-                    >
-                        A faire
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary"
-                        data-filter="done"
-                    >
-                        Faites
-                    </button>
-                </div>
+        element.append(cloneTemplate("todolist-layout"));
 
-                <ul class="list-group" data-testid="todo-list">
-                </ul>
-            </main>`;
         this.#listElement = element.querySelector(".list-group");
 
         for (let todo of this.#todos) {
@@ -77,15 +51,34 @@ export class TodoList {
         element.querySelectorAll(".btn-group button").forEach((button) => {
             button.addEventListener("click", (e) => this.#toggleFilter(e));
         });
+
+        this.#listElement.addEventListener(
+            "remove-todo",
+            ({ detail: todo }) => {
+                this.#todos = this.#todos.filter((t) => t.id !== todo.id);
+                this.#onUpdate();
+            }
+        );
+
+        this.#listElement.addEventListener(
+            "toggle-todo",
+            ({ detail: todo }) => {
+                todo.completed = !todo.completed;
+                this.#onUpdate();
+            }
+        );
     }
 
     /**
-     * @param {SubmitEvent} e
+     * Handles the form submission to add a new todo item.
+     * @param {SubmitEvent} e - The submit event object.
+     * @returns {void}
      */
     #onSubmit(e) {
         e.preventDefault();
-        const form = e.currentTarget;
-        const title = new FormData(form).get("title").toString().trim();
+        const form = e.target.closest("form");
+        const titleField = new FormData(form).get("title");
+        const title = titleField ? titleField.toString().trim() : "";
         if (title === "") {
             return;
         }
@@ -97,11 +90,24 @@ export class TodoList {
         };
         const item = new TodoListItem(todo);
         this.#listElement.prepend(item.element);
+        this.#todos.push(todo);
+        this.#onUpdate();
         form.reset();
     }
 
     /**
-     * @param {PointerEvent} e
+     * Updates the local storage with the current todo list.
+     * This is called when the todo list is modified.
+     * @returns {void}
+     */
+    #onUpdate() {
+        localStorage.setItem("todos", JSON.stringify(this.#todos));
+    }
+
+    /**
+     * Toggles the visibility of todo items based on their completion status.
+     * @param {PointerEvent} e - The event object.
+     * @returns {void}
      */
     #toggleFilter(e) {
         e.preventDefault();
@@ -126,56 +132,44 @@ export class TodoList {
     }
 }
 
+/**
+ * Represents a single todo item in the todo list.
+ * @property {Todo} todo - The todo object associated with the todo list item.
+ * @property {HTMLLIElement} element - The HTML element representing the todo list item.
+ * @method toggle - Change the state of the todo item
+ * @method remove - Removes the todo item from the list.
+ * @constructor TodoListItem - Creates a new TodoListItem instance.
+ * @returns {TodoListItem} The todo list item instance.
+ */
 class TodoListItem {
-    #element;
+    #element = null;
+    #todo = null;
 
-    /**@type {Todo}*/
+    /**
+     * @param {Todo} todo - The todo object to create the todo list item for.
+     * @type {Todo} todo - The todo object associated with the todo list item.
+     */
     constructor(todo) {
+        this.#todo = todo;
         const id = `todo-${todo.id}`;
-
-        const checkbox = createElement(
-            "input",
-            {
-                class: "form-check-input",
-                type: "checkbox",
-                id,
-                checked: todo.completed ? "" : null,
-            },
-            ""
-        );
-
-        const label = createElement(
-            "label",
-            {
-                class: "ms-2 form-check-label",
-                for: id,
-            },
-            todo.title
-        );
-
-        const deleteButton = createElement(
-            "button",
-            {
-                class: "ms-auto btn btn-danger btn-sm",
-                "data-testid": `delete-button-${todo.id}`,
-            },
-            createElement("i", { class: "bi-trash" }, "")
-        );
-
-        const li = createElement(
-            "li",
-            {
-                class: "todo list-group-item d-flex align-items-center is-completed",
-                "data-testid": `todo-item-${todo.id}`,
-            },
-            [checkbox, label, deleteButton]
-        );
-
+        const li = cloneTemplate("todolist-item").firstElementChild;
         this.#element = li;
+
+        const checkbox = li.querySelector("input");
+        checkbox.setAttribute("id", id);
+        if (todo.completed) {
+            checkbox.setAttribute("checked", "");
+        }
+
+        const label = li.querySelector("label");
+        label.setAttribute("for", id);
+        label.innerText = todo.title;
+
+        const button = li.querySelector("button");
 
         this.toggle(checkbox);
 
-        deleteButton.addEventListener("click", (e) => {
+        button.addEventListener("click", (e) => {
             this.remove(e);
         });
 
@@ -185,6 +179,7 @@ class TodoListItem {
     }
 
     /**
+     * Returns the HTML element representing the todo list item.
      * @returns {HTMLLIElement}
      */
     get element() {
@@ -201,13 +196,25 @@ class TodoListItem {
         } else {
             this.#element.classList.remove("is-completed");
         }
+        const event = new CustomEvent("toggle-todo", {
+            detail: this.#todo,
+            bubbles: true,
+        });
+        this.#element.dispatchEvent(event);
     }
 
     /**
-     * @param {Event} e
+     * Removes the todo item from the list.
+     * @param {Event} e - The event object.
      */
     remove(e) {
         e.preventDefault();
+        const event = new CustomEvent("remove-todo", {
+            detail: this.#todo,
+            bubbles: true,
+            cancelable: true,
+        });
+        this.#element.dispatchEvent(event);
         this.#element.remove();
     }
 }

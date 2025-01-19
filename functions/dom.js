@@ -1,4 +1,5 @@
 /**
+ * Creates an HTML element
  * @param {string} tagName
  * @param {object} attributes
  * @param {string | HTMLElement | HTMLElement[]} contents
@@ -8,7 +9,11 @@ export function createElement(tagName, attributes = {}, contents) {
     const element = document.createElement(tagName);
     Object.entries(attributes).forEach(([attribute, value]) => {
         if (value !== null) {
-            element.setAttribute(attribute, value);
+            if (attribute.startsWith("on") && typeof value === "function") {
+                element[attribute] = value;
+            } else {
+                element.setAttribute(attribute, value);
+            }
         }
     });
 
@@ -17,10 +22,19 @@ export function createElement(tagName, attributes = {}, contents) {
             element.append(content);
         });
     } else if (contents instanceof HTMLElement) {
-        element.append(contents);
+        if (contents !== null && contents !== undefined) {
+            element.append(contents);
+        }
     } else {
-        element.innerHTML = contents;
+        element.textContent = contents;
     }
+}
 
-    return element;
+/**
+ * Clones a template
+ * @param {string} templateId
+ * @returns {DocumentFragment}
+ */
+export function cloneTemplate(templateId) {
+    return document.getElementById(templateId).content.cloneNode(true);
 }
