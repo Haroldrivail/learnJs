@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Zoom Product</title>
+        <script src="script.js" type="module" defer></script>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <article class="product js-product">
+            <div class="product__images js-images">
+                <a
+                    target="_blank"
+                    href="img/bateau.jpg"
+                    data-medium="img/bateau_medium.jpg"
+                >
+                    <img
+                        src="img/bateau_small.jpg"
+                        alt="Bateau"
+                        class="active"
+                    />
+                </a>
+                <a
+                    target="_blank"
+                    href="img/horse.jpg"
+                    data-medium="img/horse_medium.jpg"
+                >
+                    <img src="img/horse_small.jpg" alt="Horse" />
+                </a>
+                <a
+                    target="_blank"
+                    href="img/scribe.jpg"
+                    data-medium="img/scribe_medium.jpg"
+                >
+                    <img src="img/scribe_small.jpg" alt="Scribe" />
+                </a>
+                <a
+                    target="_blank"
+                    href="img/whip.jpg"
+                    data-medium="img/whip_medium.jpg"
+                >
+                    <img src="img/whip_small.jpg" alt="Whip" />
+                </a>
+                <a
+                    target="_blank"
+                    href="img/bateau_landscape.jpg"
+                    data-medium="img/bateau_landscape_medium.jpg"
+                >
+                    <img
+                        src="img/bateau_landscape_small.jpg"
+                        alt="bateau_landscape"
+                    />
+                </a>
+            </div>
+            <div class="product__image">
+                <img
+                    src="img/bateau_medium.jpg"
+                    alt="Bateau"
+                    class="js-image-medium"
+                />
+                <div class="product__magnifier js-magnifier"></div>
+            </div>
+            <div class="product__info">
+                <h1>@la_mini_taverne</h1>
+                <p>
+                    Peintre sur figurines 🎨 <br />
+                    Photographe 📷 <br />
+                    Éditeur de livres 📚 <br />
+                    MP pour les tarifs commissions 💰 <br />
+                    Photos par @la_mini_taverne 📷
+                </p>
+                <div class="product__zoom js-zoom">
+                    <img src="data:," alt="Bateau" class="js-image-large" />
+                </div>
+            </div>
+        </article>
+    </body>
+</html>
